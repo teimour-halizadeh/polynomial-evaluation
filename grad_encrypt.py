@@ -1,12 +1,8 @@
 
 from polynoimal_base_functions import integrization
 from polynoimal_base_functions import nonnegtive_to_quantized
-from polynoimal_base_functions import dis_share
-from polynoimal_base_functions import dis_share_aggragation
 
 
-from phe import paillier
-from phe.util import invert, powmod, getprimeover, isqrt, is_prime, miller_rabin
 
 
 

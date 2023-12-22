@@ -76,7 +76,7 @@ def grad(xx):
     return grad_player
 
 
-def Pro(xx_plus, up_bound, low_bound, player_num):
+def projection_to_set(xx_plus, up_bound, low_bound, player_num):
     # here we are doing the projection
 
     for ind in range(player_num):

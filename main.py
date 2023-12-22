@@ -17,7 +17,7 @@ import matplotlib
 
 
 from polynoimal_base_functions import dis_share_aggragation
-from game import Pro
+from game import projection_to_set
 from game import grad
 from grad_encrypt import grad_encrypt
 
@@ -78,7 +78,7 @@ for k in range(K-1):
     xx_plus = xx - alpha * (F) + alpha *((A) * lamda[:, k])
 
 
-    x_proj = Pro(xx_plus, up_bound, low_bound, player_num)
+    x_proj = projection_to_set(xx_plus, up_bound, low_bound, player_num)
 
     x_plain[:, k + 1] = x_proj
 
@@ -94,7 +94,7 @@ for k in range(K-1):
 
     ll = lamda[:, k] - alpha *(t1 + t2 + t3 + t4)
 
-    ll_proj = Pro(ll, 10000, low_bound, player_num)
+    ll_proj = projection_to_set(ll, 10000, low_bound, player_num)
     lamda[:, k + 1] = ll_proj
 
 
@@ -139,7 +139,7 @@ for k in range(K-1):
 
     # xx_plus = xx - alpha * (F) 
 
-    x_proj = Pro(xx_plus, up_bound, low_bound, player_num)
+    x_proj = projection_to_set(xx_plus, up_bound, low_bound, player_num)
 
     x[:, k + 1] = x_proj
 
@@ -155,7 +155,7 @@ for k in range(K-1):
 
     ll = lamda[:, k] - alpha *(t1 + t2 + t3 + t4)
 
-    ll_proj = Pro(ll, 10000, low_bound, player_num)
+    ll_proj = projection_to_set(ll, 10000, low_bound, player_num)
     lamda[:, k + 1] = ll_proj
 
 
