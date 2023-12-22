@@ -48,30 +48,28 @@ omega = getprimeover(200)
 
 
 
-# plyer 1 parameters
-a1 = 1; b11, b12, b13, b14 = (1, 1, 1, 1);  c11, c12, c13, c14 = (0.001, 1, 1, 1);  d11, d12, d13, d14 = (0.001, 1, 1, 1)
-# d11, d12, d13, d14 = (0.001, 1, 1, 1)
+# # plyer 1 parameters
+# a1 = 1; b11, b12, b13, b14 = (1, 1, 1, 1);  c11, c12, c13, c14 = (0.001, 1, 1, 1);  d11, d12, d13, d14 = (0.001, 1, 1, 1)
+# # d11, d12, d13, d14 = (0.001, 1, 1, 1)
 
-# plyer 2 parameter
-a2 = 2; b21, b22, b23, b24 = (2, 2, 2, 2); c21, c22, c23, c24 = (1, 1, 1, 1);   d21, d22, d23, d24 = (0, 0, 0, 0)
+# # plyer 2 parameter
+# a2 = 2; b21, b22, b23, b24 = (2, 2, 2, 2); c21, c22, c23, c24 = (1, 1, 1, 1);   d21, d22, d23, d24 = (0, 0, 0, 0)
 
-# plyer 3 parameter
-a3 = 3; b31, b32, b33, b34 = (3, 3, 3, 3); c31, c32, c33, c34 = (1, 1, 1, 1);   d31, d32, d33, d34 = (0, 0, 0, 0)
+# # plyer 3 parameter
+# a3 = 3; b31, b32, b33, b34 = (3, 3, 3, 3); c31, c32, c33, c34 = (1, 1, 1, 1);   d31, d32, d33, d34 = (0, 0, 0, 0)
 
-# plyer 4 parameter
-a4 = 4; b41, b42, b43, b44 = (4, 4, 4, 4); c41, c42, c43, c44 = (1, 1, 1, 1);   d41, d42, d43, d44 = (0, 0, 0, 0)
+# # plyer 4 parameter
+# a4 = 4; b41, b42, b43, b44 = (4, 4, 4, 4); c41, c42, c43, c44 = (1, 1, 1, 1);   d41, d42, d43, d44 = (0, 0, 0, 0)
 
-# all other players' parameters
-a_other = 0.1; b_other = 0.1
+# # all other players' parameters
+# a_other = 0.1; b_other = 0.1
+
+
+
 
 
 # initial conditions of players
 x_plain[:, 0] = 2 * np.ones((player_num,))
-
-
-
-
-
 
 # global shared constraint:
 # this translates itself to sum(x_i) > 1
