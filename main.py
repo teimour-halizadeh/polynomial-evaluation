@@ -8,31 +8,25 @@ import glob
 from matplotlib.ticker import FormatStrFormatter
 import matplotlib.patches as mpatches
 import math
-import secrets
+# import secrets
 import time
 from decimal import Decimal
 from phe.util import invert, powmod, getprimeover, isqrt, is_prime, miller_rabin
 import matplotlib
 from numpy.linalg import inv
 
+from polynoimal import Integrization
+from polynoimal import nonnegtive_to_quantized
+from polynoimal import dis_share
+from polynoimal import dis_share_aggragation
+from game import Pro
+from game import grad
+
+
+from constants import player_num, K, x_plain, up_bound, low_bound, alpha
 
 
 
-def Integrization(x,resolution,omega):
-    # a function for turning a real number into a positive integer
-    x = x * (1 / resolution)
-    x = int(x)
-    x = x % omega
-    return int(x)
-
-def nonnegtive_to_quantized(x,resolution,omega):
-    # a function to turn a positive integer to real(quantized number)
-    if x>=omega/2:
-        x=x-omega
-    else:
-        x=x
-    x=x*resolution
-    return x
 
 
 
@@ -248,109 +242,6 @@ def grad_encrypt(xx, S1a, S2a, S3a, S4a, S1m, S2m, S3m, S4m):
 
 
 
-def grad(xx):
-    x1 = xx[0]; x2 = xx[1]; x3 = xx[2]; x4 = xx[3]
-
-
-    W11 = c11 * x1 + d11 * x1 ** 2 
-    W12 = c12 * x2 + d12 * x2 ** 2
-    W13 = c13 * x3 + d13 * x3 ** 2
-    W14 = c14 * x4 + d14 * x4 ** 2
-
-
-    W21 = c21 * x1 + d21 * x1 ** 2
-    W22 = c22 * x2 + d22 * x2 ** 2
-    W23 = c23 * x3 + d23 * x3 ** 2
-    W24 = c24 * x4 + d24 * x4 ** 2
-
-    W31 = c31 * x1 + d31 * x1 ** 2
-    W32 = c32 * x2 + d32 * x2 ** 2
-    W33 = c33 * x3 + d33 * x3 ** 2
-    W34 = c34 * x4 + d34 * x4 ** 2
-
-
-    W41 = c41 * x1 + d41 * x1 ** 2
-    W42 = c42 * x2 + d42 * x2 ** 2
-    W43 = c43 * x3 + d43 * x3 ** 2
-    W44 = c44 * x4 + d44 * x4 ** 2
-
-
-    F1 = 2 *a1 *(x1) + (2 * b11 * x1) + (b12 * x2 + b13 * x3 + b14 * x4) + (c11 + 2 * d11 * x1) * (W12 * W13 * W14)
-
-    F2 = 2 *a2 *(x2) + (2 * b22 * x2) + (b21 * x1 + b23 * x3 + b24 * x4) + (c22 + 2 * d22 * x2) * (W21 * W23 * W24)
-
-    F3 = 2 *a3 *(x3) + (2 * b33 * x3) + (b31 * x1 + b32 * x2 + b34 * x4) + (c33 + 2 * d33 * x3) * (W31 * W32 * W34)
-
-    F4 = 2 *a4 *(x4) + (2 * b44 * x4) + (b41 * x1 + b42 * x2 + b43 * x3) + (c44 + 2 * d44 * x4) * (W41 * W42 * W43)
-
-    grad_four = np.array([F1, F2, F3, F4])
-
-    agg_term = (a_other * np.sum(xx)) * np.ones((player_num - 4, 1))
-    grad_other = b_other * xx[4:,]
-    
-    grad_player = np.append(grad_four, grad_other)
-
-
-    return grad_player
-
-
-
-def Pro(xx_plus, up_bound, low_bound):
-    # here we are doing the projection
-
-    for ind in range(player_num):
-        beta = xx_plus[ind]
-        if beta > up_bound:
-
-            beta = up_bound
-
-
-        elif beta <0:
-
-            beta = 0
-
-        xx_plus[ind] = beta
-   
-
-    return xx_plus     
-
-
-def dis_share():
-
-    s2a = secrets.randbelow(omega)
-    s3a = secrets.randbelow(omega)
-    s4a = secrets.randbelow(omega)
-    s1a = (-(s2a + s3a + s4a)) % omega
-
-    s2m = secrets.randbelow(omega)
-    s3m = secrets.randbelow(omega)
-    s4m = secrets.randbelow(omega)
-    mul = (s2m * s3m * s4m) % omega
-    s1m = pow((mul), omega - 2, omega)
-
-
-    return s1a, s2a, s3a, s4a, s1m, s2m, s3m, s4m   
-
-def dis_share_aggragation():
-
-
-    S11a, S12a, S13a, S14a, S11m, S12m, S13m, S14m = dis_share()
-    S21a, S22a, S23a, S24a, S21m, S22m, S23m, S24m = dis_share()
-    S31a, S32a, S33a, S34a, S31m, S32m, S33m, S34m = dis_share()
-    S41a, S42a, S43a, S44a, S41m, S42m, S43m, S44m = dis_share()
-
-
-    S1a = (S11a + S21a + S31a + S41a) % omega 
-    S2a = (S12a + S22a + S32a + S42a) % omega 
-    S3a = (S13a + S23a + S33a + S43a) % omega 
-    S4a = (S14a + S24a + S34a + S44a) % omega 
-
-
-    S1m = (S11m * S21m * S31m * S41m) % omega
-    S2m = (S12m * S22m * S32m * S42m) % omega
-    S3m = (S13m * S23m * S33m * S43m) % omega
-    S4m = (S14m * S24m * S34m * S44m) % omega
-    return S1a, S2a, S3a, S4a, S1m, S2m, S3m, S4m
 
 
 
@@ -372,22 +263,22 @@ omega = getprimeover(200)
 
 
 ########################################################################################
-# Game parameters
+# # Game parameters
 
-# number of players
-player_num = 30
+# # number of players
+# player_num = 30
 
-# number of iteration
-K = 100
+# # number of iteration
+# K = 100
 
-# strategy vector
-x_plain = np.zeros((player_num, K))
+# # strategy vector
+# x_plain = np.zeros((player_num, K))
 
-# upper bound and lower bound for the strtegies
-up_bound = 2; low_bound = 0
+# # upper bound and lower bound for the strtegies
+# up_bound = 2; low_bound = 0
 
-# rate in the gradient descent method
-alpha = 0.01
+# # rate in the gradient descent method
+# alpha = 0.01
 
 
 
@@ -471,7 +362,7 @@ for k in range(K-1):
     xx_plus = xx - alpha * (F) + alpha *((A) * lamda[:, k])
 
 
-    x_proj = Pro(xx_plus, up_bound, low_bound)
+    x_proj = Pro(xx_plus, up_bound, low_bound, player_num)
 
     x_plain[:, k + 1] = x_proj
 
@@ -487,7 +378,7 @@ for k in range(K-1):
 
     ll = lamda[:, k] - alpha *(t1 + t2 + t3 + t4)
 
-    ll_proj = Pro(ll, 10000, low_bound)
+    ll_proj = Pro(ll, 10000, low_bound, player_num)
     lamda[:, k + 1] = ll_proj
 
 
@@ -505,7 +396,7 @@ for k in range(K-1):
 
     # it is possible that each agent store their aggregated random shares in  a file before the start of the algortihm
     # Here we just generate the shares in real time. 
-    S1a, S2a, S3a, S4a, S1m, S2m, S3m, S4m = dis_share_aggragation()
+    S1a, S2a, S3a, S4a, S1m, S2m, S3m, S4m = dis_share_aggragation(omega)
     
 
     xx = x[:, k]
@@ -531,7 +422,7 @@ for k in range(K-1):
 
     # xx_plus = xx - alpha * (F) 
 
-    x_proj = Pro(xx_plus, up_bound, low_bound)
+    x_proj = Pro(xx_plus, up_bound, low_bound, player_num)
 
     x[:, k + 1] = x_proj
 
@@ -547,7 +438,7 @@ for k in range(K-1):
 
     ll = lamda[:, k] - alpha *(t1 + t2 + t3 + t4)
 
-    ll_proj = Pro(ll, 10000, low_bound)
+    ll_proj = Pro(ll, 10000, low_bound, player_num)
     lamda[:, k + 1] = ll_proj
 
 
