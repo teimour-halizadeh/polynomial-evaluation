@@ -15,15 +15,17 @@ from phe.util import invert, powmod, getprimeover, isqrt, is_prime, miller_rabin
 import matplotlib
 from numpy.linalg import inv
 
-from polynoimal import Integrization
-from polynoimal import nonnegtive_to_quantized
-from polynoimal import dis_share
-from polynoimal import dis_share_aggragation
+from polynoimal_base_functions import integrization
+from polynoimal_base_functions import nonnegtive_to_quantized
+from polynoimal_base_functions import dis_share
+from polynoimal_base_functions import dis_share_aggragation
 from game import Pro
 from game import grad
 
+# from grad_encrypt import grad_encrypt
 
 from constants import player_num, K, x_plain, up_bound, low_bound, alpha
+from constants import L
 
 
 
@@ -43,7 +45,7 @@ def grad_encrypt(xx, S1a, S2a, S3a, S4a, S1m, S2m, S3m, S4m):
 
     # computation for agent 2 by agent 1
     x_1 = b12
-    x_1_hat = Integrization(x_1, r1, omega)
+    x_1_hat = integrization(x_1, r1, omega)
     Ex1 = public_key.raw_encrypt(x_1_hat)
     
 
@@ -51,7 +53,7 @@ def grad_encrypt(xx, S1a, S2a, S3a, S4a, S1m, S2m, S3m, S4m):
     # function.
 
     k1 = x2
-    k1_hat = Integrization(k1, r1, omega)
+    k1_hat = integrization(k1, r1, omega)
     P12_encrypted = ((pow(Ex1, k1_hat, N_square))) % N_square
 
 
@@ -68,7 +70,7 @@ def grad_encrypt(xx, S1a, S2a, S3a, S4a, S1m, S2m, S3m, S4m):
     # step 1 : node 1 encrypts its shares in P13
 
     x_1 = b13
-    x_1_hat = Integrization(x_1, r1, omega)
+    x_1_hat = integrization(x_1, r1, omega)
     Ex1 = public_key.raw_encrypt(x_1_hat)
     
 
@@ -76,7 +78,7 @@ def grad_encrypt(xx, S1a, S2a, S3a, S4a, S1m, S2m, S3m, S4m):
     # function.
 
     k1 = x3
-    k1_hat = Integrization(k1, r1, omega)
+    k1_hat = integrization(k1, r1, omega)
     P13_encrypted = ((pow(Ex1, k1_hat, N_square))) % N_square
 
     # node 3 sends the following to node 1
@@ -96,7 +98,7 @@ def grad_encrypt(xx, S1a, S2a, S3a, S4a, S1m, S2m, S3m, S4m):
 
     # node 1 computation
     W11 = c11 + 2 * d11 * x1 
-    x_1_hat = Integrization(W11, r2, omega)
+    x_1_hat = integrization(W11, r2, omega)
     x_1_hat = (x_1_hat * S1m) % omega
     # keep it for now
 
@@ -116,12 +118,12 @@ def grad_encrypt(xx, S1a, S2a, S3a, S4a, S1m, S2m, S3m, S4m):
 
     # now it's time for node 2 to perform its tasks for the multiplication part
     k2_1 =  x2
-    k2_1_hat = Integrization(k2_1, r2, omega)
+    k2_1_hat = integrization(k2_1, r2, omega)
     k2_1_hat = (k2_1_hat * S2m) % omega
     W121_encrypted = ((pow(Ec12, k2_1_hat, N_square))) % N_square
 
     k2_2 =  x2 ** 2
-    k2_2_hat = Integrization(k2_2, r2, omega)
+    k2_2_hat = integrization(k2_2, r2, omega)
     k2_2_hat = (k2_2_hat * S2m) % omega
     W122_encrypted = ((pow(Ed12, k2_2_hat, N_square))) % N_square
 
@@ -146,12 +148,12 @@ def grad_encrypt(xx, S1a, S2a, S3a, S4a, S1m, S2m, S3m, S4m):
 
     # now it's time for node 2 to perform its tasks for the multiplication part
     k3_1 =  x3
-    k3_1_hat = Integrization(k3_1, r2, omega)
+    k3_1_hat = integrization(k3_1, r2, omega)
     k3_1_hat = (k3_1_hat * S3m) % omega
     W131_encrypted = ((pow(Ec13, k3_1_hat, N_square))) % N_square
 
     k3_2 =  x3 ** 2
-    k3_2_hat = Integrization(k3_2, r2, omega)
+    k3_2_hat = integrization(k3_2, r2, omega)
     k3_2_hat = (k3_2_hat * S3m) % omega
     W132_encrypted = ((pow(Ed13, k3_2_hat, N_square))) % N_square
 
@@ -197,7 +199,7 @@ def grad_encrypt(xx, S1a, S2a, S3a, S4a, S1m, S2m, S3m, S4m):
     # first P14
     # node 1 encrypts its share in this polynomial and sends it to this node
     x_1 = b14
-    x_1_hat = Integrization(x_1, r1, omega)
+    x_1_hat = integrization(x_1, r1, omega)
     Ex1 = public_key.raw_encrypt(x_1_hat)
     
 
@@ -206,7 +208,7 @@ def grad_encrypt(xx, S1a, S2a, S3a, S4a, S1m, S2m, S3m, S4m):
     # function.
 
     k1 = x4
-    k1_hat = Integrization(k1, r1, omega)
+    k1_hat = integrization(k1, r1, omega)
     P14_encrypted = ((pow(Ex1, k1_hat, N_square))) % N_square
 
 
@@ -214,7 +216,7 @@ def grad_encrypt(xx, S1a, S2a, S3a, S4a, S1m, S2m, S3m, S4m):
     # then we take care of the multiplicative part
     W14 = c14 * x4 + d14 * x4 ** 2
     k1_4 = W14
-    k1_4_hat = Integrization(k1_4, r2, omega)
+    k1_4_hat = integrization(k1_4, r2, omega)
     k1_4_hat = (k1_4_hat * S4m) % omega
 
     # now node 4 uses what it received from node 1 to compute W1 * W2 * W3 * W4
@@ -263,22 +265,7 @@ omega = getprimeover(200)
 
 
 ########################################################################################
-# # Game parameters
 
-# # number of players
-# player_num = 30
-
-# # number of iteration
-# K = 100
-
-# # strategy vector
-# x_plain = np.zeros((player_num, K))
-
-# # upper bound and lower bound for the strtegies
-# up_bound = 2; low_bound = 0
-
-# # rate in the gradient descent method
-# alpha = 0.01
 
 
 
@@ -319,31 +306,6 @@ lamda = np.zeros((player_num, K))
 
 # z vector defined in the main paper
 Z = np.zeros((player_num, K))
-
-
-
-
-# the communication graph for the player
-# notice this communication graph is different from the inference graph.
-# here we assume a star graph for the players
-# it could be anything else as long as it has the condistion in the main paper
-
-
-all_one = np.ones((player_num, 1))
-
-e1 = np.zeros((player_num, 1))
-e1[0, 0] = np.array(1)
-
-e_1 = all_one - e1
-
-# adjacency matrix for the star graph
-Ad = np.matmul(e1, np.transpose(e_1)) + np.matmul(e_1, np.transpose(e1))
-
-D = np.sum(Ad,  axis=0)
-Dw = np.diag(D)
-
-# this is the Laplacian matrix. We use this matrix to implement the code in the Pavel's paper
-L = Dw - Ad
 
 
 
@@ -445,8 +407,7 @@ for k in range(K-1):
 
 
 
-# this is just a vector for plotting the results
-Time_steps = np.arange(0, K, 1)
+
 
 
 
@@ -454,7 +415,8 @@ Time_steps = np.arange(0, K, 1)
 # PLOT
 ################################################################
 
-
+# this is just a vector for plotting the results
+Time_steps = np.arange(0, K, 1)
 
 matplotlib.rcParams['pdf.fonttype'] = 42
 matplotlib.rcParams['ps.fonttype'] = 42

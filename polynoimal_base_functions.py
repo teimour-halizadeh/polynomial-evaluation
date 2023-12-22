@@ -2,7 +2,7 @@
 import secrets
 
 
-def Integrization(x,resolution,omega):
+def integrization(x,resolution,omega):
     # a function for turning a real number into a positive integer
     x = x * (1 / resolution)
     x = int(x)
