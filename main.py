@@ -1,19 +1,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from phe import paillier
-
-
-from matplotlib.ticker import FormatStrFormatter
-import matplotlib.patches as mpatches
-
-
-
-
-import time
-from decimal import Decimal
-from phe.util import getprimeover
 import matplotlib
 
+
+from phe import paillier
+from phe.util import getprimeover
+
+import time
 
 
 from polynoimal_base_functions import dis_share_aggragation
@@ -38,13 +31,6 @@ omega = getprimeover(200)
 
 
 
-
-
-########################################################################################
-
-
-
-
 # initial conditions of players
 x_plain[:, 0] = 2 * np.ones((player_num,))
 
@@ -56,7 +42,7 @@ B = (1/player_num) * np.ones((player_num))
 
 
 # lagrange multiplier
-lamda = np.zeros((player_num, K))
+lambda_val = np.zeros((player_num, K))
 
 # z vector defined in the main paper
 Z = np.zeros((player_num, K))
@@ -75,7 +61,7 @@ for k in range(K-1):
 
     F = grad(xx)
 
-    xx_plus = xx - alpha * (F) + alpha *((A) * lamda[:, k])
+    xx_plus = xx - alpha * (F) + alpha *((A) * lambda_val[:, k])
 
 
     x_proj = projection_to_set(xx_plus, up_bound, low_bound, player_num)
@@ -83,19 +69,19 @@ for k in range(K-1):
     x_plain[:, k + 1] = x_proj
 
 
-    Z[:, k + 1] = Z[:, k] + alpha * (np.matmul(L, lamda[:, k])) 
+    Z[:, k + 1] = Z[:, k] + alpha * (np.matmul(L, lambda_val[:, k])) 
 
     t1 = ((A) * (2 * x_plain[:, k+1] - x_plain[:, k])) - (B)
 
 
     t2 = np.matmul(2 * L, Z[:, k+1])
     t3 = np.matmul(-L, Z[:, k])
-    t4 = np.matmul(L, lamda[:, k])
+    t4 = np.matmul(L, lambda_val[:, k])
 
-    ll = lamda[:, k] - alpha *(t1 + t2 + t3 + t4)
+    ll = lambda_val[:, k] - alpha *(t1 + t2 + t3 + t4)
 
     ll_proj = projection_to_set(ll, 10000, low_bound, player_num)
-    lamda[:, k + 1] = ll_proj
+    lambda_val[:, k + 1] = ll_proj
 
 
 ###############################################################################
@@ -135,7 +121,7 @@ for k in range(K-1):
     F[0] = Enc_grad
 
 
-    xx_plus = xx - alpha * (F) + alpha *((A) * lamda[:, k])
+    xx_plus = xx - alpha * (F) + alpha *((A) * lambda_val[:, k])
 
     # xx_plus = xx - alpha * (F) 
 
@@ -144,24 +130,19 @@ for k in range(K-1):
     x[:, k + 1] = x_proj
 
 
-    Z[:, k + 1] = Z[:, k] + alpha * (np.matmul(L, lamda[:, k])) 
+    Z[:, k + 1] = Z[:, k] + alpha * (np.matmul(L, lambda_val[:, k])) 
 
     t1 = ((A) * (2 * x[:, k+1] - x[:, k])) - (B)
 
 
     t2 = np.matmul(2 * L, Z[:, k+1])
     t3 = np.matmul(-L, Z[:, k])
-    t4 = np.matmul(L, lamda[:, k])
+    t4 = np.matmul(L, lambda_val[:, k])
 
-    ll = lamda[:, k] - alpha *(t1 + t2 + t3 + t4)
+    ll = lambda_val[:, k] - alpha *(t1 + t2 + t3 + t4)
 
     ll_proj = projection_to_set(ll, 10000, low_bound, player_num)
-    lamda[:, k + 1] = ll_proj
-
-
-
-
-
+    lambda_val[:, k + 1] = ll_proj
 
 
 
