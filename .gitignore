@@ -170,3 +170,5 @@ my_project/
 .my_project/
 phe/
 .phe/
+
+*.pdf 
