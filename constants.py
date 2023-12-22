@@ -1,6 +1,17 @@
 import numpy as np
 
 
+
+
+# resolution for quantization for states and controller
+resolution = 10 ** -40
+r1 = pow(resolution, 1/2)
+r2 = pow(resolution, 1/4)
+
+
+
+
+
 # Game parameters
 
 # number of players
@@ -17,6 +28,7 @@ up_bound = 2; low_bound = 0
 
 # rate in the gradient descent method
 alpha = 0.01
+
 
 
 

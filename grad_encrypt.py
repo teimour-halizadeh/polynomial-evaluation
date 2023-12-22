@@ -34,30 +34,12 @@ a_other = 0.1; b_other = 0.1
 
 
 
-# Paillier scheme parameters
-public_key, private_key, N, P, Q = paillier.generate_paillier_keypair(private_keyring=None, n_length=1024)
-N_square = N * N
-
-
-# resolution for quantization for states and controller
-resolution = 10 ** -40
-r1 = pow(resolution, 1/2)
-r2 = pow(resolution, 1/4)
-
-
-
-# Omega value in the paper.
-# Notice it is 200 bits long, around the order of 10^60.
-omega = getprimeover(200)
 
 
 
 
-
-
-
-
-def grad_encrypt(xx, S1a, S2a, S3a, S4a, S1m, S2m, S3m, S4m):
+def grad_encrypt(xx, S1a, S2a, S3a, S4a, S1m, S2m, S3m, S4m,
+                  r1, r2, N_square, resolution, omega, public_key, private_key):
 
     x1 = xx[0]; x2 = xx[1]; x3 = xx[2]; x4 = xx[3]
 
