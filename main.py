@@ -2,26 +2,23 @@ import numpy as np
 import matplotlib.pyplot as plt
 from phe import paillier
 
-import os
-import glob
 
 from matplotlib.ticker import FormatStrFormatter
 import matplotlib.patches as mpatches
-import math
-# import secrets
+
+
+
+
 import time
 from decimal import Decimal
-from phe.util import invert, powmod, getprimeover, isqrt, is_prime, miller_rabin
+from phe.util import getprimeover
 import matplotlib
-from numpy.linalg import inv
 
-from polynoimal_base_functions import integrization
-from polynoimal_base_functions import nonnegtive_to_quantized
-from polynoimal_base_functions import dis_share
+
+
 from polynoimal_base_functions import dis_share_aggragation
 from game import Pro
 from game import grad
-
 from grad_encrypt import grad_encrypt
 
 from constants import player_num, K, x_plain, up_bound, low_bound, alpha
@@ -44,26 +41,6 @@ omega = getprimeover(200)
 
 
 ########################################################################################
-
-
-
-
-# # plyer 1 parameters
-# a1 = 1; b11, b12, b13, b14 = (1, 1, 1, 1);  c11, c12, c13, c14 = (0.001, 1, 1, 1);  d11, d12, d13, d14 = (0.001, 1, 1, 1)
-# # d11, d12, d13, d14 = (0.001, 1, 1, 1)
-
-# # plyer 2 parameter
-# a2 = 2; b21, b22, b23, b24 = (2, 2, 2, 2); c21, c22, c23, c24 = (1, 1, 1, 1);   d21, d22, d23, d24 = (0, 0, 0, 0)
-
-# # plyer 3 parameter
-# a3 = 3; b31, b32, b33, b34 = (3, 3, 3, 3); c31, c32, c33, c34 = (1, 1, 1, 1);   d31, d32, d33, d34 = (0, 0, 0, 0)
-
-# # plyer 4 parameter
-# a4 = 4; b41, b42, b43, b44 = (4, 4, 4, 4); c41, c42, c43, c44 = (1, 1, 1, 1);   d41, d42, d43, d44 = (0, 0, 0, 0)
-
-# # all other players' parameters
-# a_other = 0.1; b_other = 0.1
-
 
 
 
