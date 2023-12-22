@@ -33,6 +33,27 @@ alpha = 0.01
 
 
 
+a_par = np.array([[1, 2, 3, 4]])
+
+b_par = np.array([[1, 0, 0, 0],
+                  [0, 2, 0, 0],
+                  [0, 0, 3, 0],
+                  [0, 0, 0, 4]]) @ np.ones((4,4))
+
+c_par = np.ones((4,4))
+c_par[0, 0] = 0.001
+
+
+d_par = np.zeros((4,4))
+d_par[0,:] = np.array([[0.001, 1, 1, 1]])
+
+
+
+
+# all other players' parameters
+a_other = 0.1; b_other = 0.1
+
+
 # the communication graph for the player
 # notice this communication graph is different from the inference graph.
 # here we assume a star graph for the players

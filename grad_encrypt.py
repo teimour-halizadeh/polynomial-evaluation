@@ -2,32 +2,7 @@
 from polynoimal_base_functions import integrization
 from polynoimal_base_functions import nonnegtive_to_quantized
 
-
-
-
-
-
-
-
-# plyer 1 parameters
-a1 = 1; b11, b12, b13, b14 = (1, 1, 1, 1);  c11, c12, c13, c14 = (0.001, 1, 1, 1);  d11, d12, d13, d14 = (0.001, 1, 1, 1)
-# d11, d12, d13, d14 = (0.001, 1, 1, 1)
-
-# plyer 2 parameter
-a2 = 2; b21, b22, b23, b24 = (2, 2, 2, 2); c21, c22, c23, c24 = (1, 1, 1, 1);   d21, d22, d23, d24 = (0, 0, 0, 0)
-
-# plyer 3 parameter
-a3 = 3; b31, b32, b33, b34 = (3, 3, 3, 3); c31, c32, c33, c34 = (1, 1, 1, 1);   d31, d32, d33, d34 = (0, 0, 0, 0)
-
-# plyer 4 parameter
-a4 = 4; b41, b42, b43, b44 = (4, 4, 4, 4); c41, c42, c43, c44 = (1, 1, 1, 1);   d41, d42, d43, d44 = (0, 0, 0, 0)
-
-# all other players' parameters
-a_other = 0.1; b_other = 0.1
-
-
-
-
+from constants import a_par, b_par, c_par, d_par, a_other, b_other
 
 
 
@@ -47,7 +22,7 @@ def grad_encrypt(xx, S1a, S2a, S3a, S4a, S1m, S2m, S3m, S4m,
 
 
     # computation for agent 2 by agent 1
-    x_1 = b12
+    x_1 = b_par[0,1]
     x_1_hat = integrization(x_1, r1, omega)
     Ex1 = public_key.raw_encrypt(x_1_hat)
     
@@ -72,7 +47,7 @@ def grad_encrypt(xx, S1a, S2a, S3a, S4a, S1m, S2m, S3m, S4m,
 
     # step 1 : node 1 encrypts its shares in P13
 
-    x_1 = b13
+    x_1 = b_par[0,2]
     x_1_hat = integrization(x_1, r1, omega)
     Ex1 = public_key.raw_encrypt(x_1_hat)
     
@@ -100,7 +75,7 @@ def grad_encrypt(xx, S1a, S2a, S3a, S4a, S1m, S2m, S3m, S4m,
     # resolution ^4 in the final stage. This differs from what it has to do for P12 and P13.
 
     # node 1 computation
-    W11 = c11 + 2 * d11 * x1 
+    W11 = c_par[0,0] + 2 * d_par[0,0] * x1 
     x_1_hat = integrization(W11, r2, omega)
     x_1_hat = (x_1_hat * S1m) % omega
     # keep it for now
@@ -112,10 +87,10 @@ def grad_encrypt(xx, S1a, S2a, S3a, S4a, S1m, S2m, S3m, S4m,
     # First let's take care of the node 2
 
     # this part is done by node 1 becuse it includes the private data
-    # W2_coeffieicent = c12
+    # W2_coeffieicent = c_par[0,1]
     # x_1_hat = Integrization(x_1, r1, omega)
-    Ec12 = public_key.raw_encrypt(c12)
-    Ed12 = public_key.raw_encrypt(d12)
+    Ec_par01 = public_key.raw_encrypt(int(c_par[0,1]))
+    Ed12 = public_key.raw_encrypt(int(d_par[0,1]))
     # send the coefficients to node 2
 
 
@@ -123,7 +98,7 @@ def grad_encrypt(xx, S1a, S2a, S3a, S4a, S1m, S2m, S3m, S4m,
     k2_1 =  x2
     k2_1_hat = integrization(k2_1, r2, omega)
     k2_1_hat = (k2_1_hat * S2m) % omega
-    W121_encrypted = ((pow(Ec12, k2_1_hat, N_square))) % N_square
+    W121_encrypted = ((pow(Ec_par01, k2_1_hat, N_square))) % N_square
 
     k2_2 =  x2 ** 2
     k2_2_hat = integrization(k2_2, r2, omega)
@@ -142,10 +117,10 @@ def grad_encrypt(xx, S1a, S2a, S3a, S4a, S1m, S2m, S3m, S4m,
     # so there is no priority.
 
     # this part is done by node 1 becuse it includes the private data
-    # W3_coeffieicent = c13
+    # W3_coeffieicent = c_par[0,2]
     # x_1_hat = Integrization(x_1, r1, omega)
-    Ec13 = public_key.raw_encrypt(c13)
-    Ed13 = public_key.raw_encrypt(d13)
+    Ec_par02 = public_key.raw_encrypt(int(c_par[0,2]))
+    Ed13 = public_key.raw_encrypt(int(d_par[0,2]))
     # send the coefficients to node 2
 
 
@@ -153,7 +128,7 @@ def grad_encrypt(xx, S1a, S2a, S3a, S4a, S1m, S2m, S3m, S4m,
     k3_1 =  x3
     k3_1_hat = integrization(k3_1, r2, omega)
     k3_1_hat = (k3_1_hat * S3m) % omega
-    W131_encrypted = ((pow(Ec13, k3_1_hat, N_square))) % N_square
+    W131_encrypted = ((pow(Ec_par02, k3_1_hat, N_square))) % N_square
 
     k3_2 =  x3 ** 2
     k3_2_hat = integrization(k3_2, r2, omega)
@@ -201,7 +176,7 @@ def grad_encrypt(xx, S1a, S2a, S3a, S4a, S1m, S2m, S3m, S4m,
 
     # first P14
     # node 1 encrypts its share in this polynomial and sends it to this node
-    x_1 = b14
+    x_1 = b_par[0,3]
     x_1_hat = integrization(x_1, r1, omega)
     Ex1 = public_key.raw_encrypt(x_1_hat)
     
@@ -217,7 +192,7 @@ def grad_encrypt(xx, S1a, S2a, S3a, S4a, S1m, S2m, S3m, S4m,
 
 
     # then we take care of the multiplicative part
-    W14 = c14 * x4 + d14 * x4 ** 2
+    W14 = c_par[0,3] * x4 + d_par[0,3] * x4 ** 2
     k1_4 = W14
     k1_4_hat = integrization(k1_4, r2, omega)
     k1_4_hat = (k1_4_hat * S4m) % omega
@@ -243,4 +218,4 @@ def grad_encrypt(xx, S1a, S2a, S3a, S4a, S1m, S2m, S3m, S4m,
     P = (node_2_share + node_3_share + node_4_share+ S1a) %omega
 
     P = nonnegtive_to_quantized(P , resolution, omega)
-    return (P + 2 *a1 *(x1) + 2 * b11 *x1)
+    return (P + 2 *a_par[0,0] *(x1) + 2 * b_par[0,0] *x1)
